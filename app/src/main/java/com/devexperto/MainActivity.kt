@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.devexperto.MediaItem.Type
@@ -16,7 +17,6 @@ import kotlinx.coroutines.withContext
 
 
 class MainActivity : AppCompatActivity() {
-
 
     private val adapter = MediaAdapter {
         startActivity<DetailActivity>(DetailActivity.EXTRA_ID to it.id)
@@ -32,23 +32,20 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun updateItems(filter: Int = R.id.filter_all) {
+    private fun updateItems(filter: Filter = Filter.None) {
         lifecycleScope.launch {
             adapter.items = withContext(Dispatchers.IO) {
                 getFilteredItems(filter)
             }
-
         }
     }
 
 
-    private fun getFilteredItems(filter: Int): List<MediaItem> {
+    private fun getFilteredItems(filter: Filter): List<MediaItem> {
         return MediaProvider.getItems().let { media ->
             when (filter) {
-                R.id.filter_photos -> media.filter { it.type == Type.PHOTO }
-                R.id.filter_videos -> media.filter { it.type == Type.VIDEO }
-                R.id.filter_all -> media
-                else -> emptyList()
+                Filter.None -> media
+                is Filter.ByType -> media.filter { it.type == filter.type }
             }
         }
     }
@@ -59,8 +56,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        updateItems(item.itemId)
+        val filter = when (item.itemId) {
+            R.id.filter_photos -> Filter.ByType(Type.PHOTO)
+            R.id.filter_videos -> Filter.ByType(Type.VIDEO)
+            else -> Filter.None
 
+        }
+
+        updateItems(filter)
         return super.onOptionsItemSelected(item)
     }
 
