@@ -18,7 +18,7 @@ class MediaAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = parent.inflate(R.layout.view_media_item)
+        val view = parent.inflate()
         return ViewHolder(view)
     }
 
