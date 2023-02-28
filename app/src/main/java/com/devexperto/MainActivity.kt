@@ -4,6 +4,7 @@ package com.devexperto
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.devexperto.MediaItem.Type
@@ -17,7 +18,9 @@ import kotlinx.coroutines.withContext
 class MainActivity : AppCompatActivity() {
 
 
-    private val adapter = MediaAdapter { toast(it.title) }
+    private val adapter = MediaAdapter {
+        startActivity<DetailActivity>(DetailActivity.EXTRA_ID to it.id)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
