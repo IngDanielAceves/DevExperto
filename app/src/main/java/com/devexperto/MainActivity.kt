@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.devexperto.MediaItem.Type
@@ -15,8 +14,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+
 
     private val adapter = MediaAdapter {
         startActivity<DetailActivity>(DetailActivity.EXTRA_ID to it.id)
@@ -24,8 +25,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
         binding.recycler.adapter = adapter
         updateItems()
@@ -33,10 +35,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateItems(filter: Filter = Filter.None) {
+        binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             adapter.items = withContext(Dispatchers.IO) {
                 getFilteredItems(filter)
             }
+            binding.progressBar.visibility = View.GONE
         }
     }
 
