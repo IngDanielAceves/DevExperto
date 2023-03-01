@@ -9,7 +9,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_corners">
 
         <ImageView
             android:id="@+id/mediaThumb"
@@ -34,9 +35,13 @@
         android:id="@+id/mediaTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#333"
-        android:padding="16dp"
+        android:background="@drawable/rounded_corners"
+        android:gravity="center"
+        android:padding="17dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
-        tools:text="Title"/>
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        tools:text="TITLE" />
 
 </LinearLayout>
